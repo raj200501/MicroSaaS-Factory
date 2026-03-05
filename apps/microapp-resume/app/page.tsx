@@ -1,15 +1,60 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { Button, Input, Textarea, Label, Card, CardHeader, CardTitle, CardDescription, CardContent } from "@microsaas/ui";
 import { generateResumeBullets } from "./actions";
+import { useState } from "react";
 
 function SubmitButton() {
     const { pending } = useFormStatus();
     return (
-        <Button type="submit" className="w-full" disabled={pending}>
-            {pending ? "Generating..." : "Generate Bullets"}
-        </Button>
+        <button
+            type="submit"
+            disabled={pending}
+            className={`w-full py-3.5 px-6 rounded-xl font-bold text-sm transition-all duration-300 ${pending
+                    ? "bg-white/5 text-muted-foreground cursor-not-allowed border border-white/5"
+                    : "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/30 hover:scale-[1.01] active:scale-[0.99]"
+                }`}
+        >
+            {pending ? (
+                <span className="flex items-center justify-center gap-2.5">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Generating bullets...
+                </span>
+            ) : (
+                "✨ Generate Resume Bullets"
+            )}
+        </button>
+    );
+}
+
+function BulletSection({ title, icon, bullets, color }: { title: string; icon: string; bullets: string[]; color: string }) {
+    const [copied, setCopied] = useState(false);
+    return (
+        <div className="glass rounded-2xl overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/5 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <span>{icon}</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{title}</span>
+                </div>
+                <button
+                    onClick={() => { navigator.clipboard.writeText(bullets.join("\n")); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-full font-bold transition-all ${copied ? "bg-green-500/20 text-green-300" : "glass glass-hover"}`}
+                >
+                    {copied ? "✓" : "📋"}
+                </button>
+            </div>
+            <ul className="p-5 space-y-3">
+                {bullets.map((b: string, i: number) => (
+                    <li key={i} className="flex gap-3 text-sm leading-relaxed">
+                        <span className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-gradient-to-r ${color}`} />
+                        <span className="text-foreground/90">{b}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 }
 
@@ -17,92 +62,104 @@ export default function ResumeApp() {
     const [state, formAction] = useFormState(generateResumeBullets, null);
 
     return (
-        <div className="grid gap-8 md:grid-cols-2 lg:max-w-6xl mx-auto w-full">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Bullet Generator</CardTitle>
-                    <CardDescription>Enter details about your experience to generate polished resume bullets.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form action={formAction} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="role">Role Title</Label>
-                            <Input id="role" name="role" placeholder="e.g. Senior Frontend Engineer" required />
+        <div className="container mx-auto px-4 md:px-6 py-8 max-w-6xl">
+            {/* Hero */}
+            <div className="mb-8">
+                <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-xl shadow-lg shadow-violet-500/20">
+                        📄
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold">Resume Bullet Factory</h1>
+                        <p className="text-sm text-muted-foreground">Transform responsibilities into ATS-optimized bullets</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-5">
+                {/* Input (2 cols) */}
+                <div className="lg:col-span-2">
+                    <form action={formAction}>
+                        <div className="glass rounded-2xl overflow-hidden">
+                            <div className="px-5 py-3.5 border-b border-white/5 flex items-center gap-2">
+                                <div className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
+                                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Input</span>
+                            </div>
+                            <div className="p-5 space-y-4">
+                                <div className="space-y-1.5">
+                                    <label htmlFor="role" className="text-xs font-semibold text-foreground/80 uppercase tracking-wider">Role Title</label>
+                                    <input id="role" name="role" type="text" placeholder="e.g. Senior Frontend Engineer" required
+                                        className="w-full rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label htmlFor="company" className="text-xs font-semibold text-foreground/80 uppercase tracking-wider">Company</label>
+                                    <input id="company" name="company" type="text" placeholder="e.g. Google" required
+                                        className="w-full rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label htmlFor="responsibilities" className="text-xs font-semibold text-foreground/80 uppercase tracking-wider">Responsibilities & Outcomes</label>
+                                    <textarea id="responsibilities" name="responsibilities" rows={5}
+                                        placeholder="Built the new dashboard, improved load times by 40%, led a team of 3..."
+                                        required
+                                        className="w-full rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all resize-none" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label htmlFor="seniority" className="text-xs font-semibold text-foreground/80 uppercase tracking-wider">Seniority</label>
+                                    <input id="seniority" name="seniority" type="text" placeholder="e.g. Mid-level, Staff, Principal"
+                                        className="w-full rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
+                                </div>
+                            </div>
+                            <div className="p-5 pt-0">
+                                <SubmitButton />
+                            </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="company">Company / Project</Label>
-                            <Input id="company" name="company" placeholder="e.g. Acme Corp" required />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="responsibilities">Responsibilities & Outcomes</Label>
-                            <Textarea
-                                id="responsibilities"
-                                name="responsibilities"
-                                placeholder="Built the new dashboard, improved load times by 40%, led a team of 3..."
-                                className="h-32"
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="seniority">Seniority Level</Label>
-                            <Input id="seniority" name="seniority" placeholder="e.g. Mid-level, Staff" />
-                        </div>
-                        <SubmitButton />
                     </form>
                     {state?.error && (
-                        <div className="mt-4 p-3 bg-red-50 text-red-800 rounded text-sm">
-                            {state.error}
+                        <div className="mt-4 rounded-xl bg-red-500/10 border border-red-500/20 p-4">
+                            <p className="text-sm text-red-300">❌ {state.error}</p>
                         </div>
                     )}
-                </CardContent>
-            </Card>
+                </div>
 
-            <div className="space-y-4">
-                <Card className="bg-muted/50">
-                    <CardHeader>
-                        <CardTitle>Generated Results</CardTitle>
-                        <CardDescription>
-                            Your optimized bullets will appear here.
-                            {state?.provider && <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">via {state.provider}</span>}
-                            {state?.latencyMs && <span className="ml-2 px-2 py-0.5 bg-gray-200 text-gray-800 text-xs rounded-full">{state.latencyMs}ms</span>}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="min-h-[300px]">
-                        {!state?.result ? (
-                            <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
-                                Fill out the form to generate bullets.
-                            </div>
-                        ) : (
-                            <div className="space-y-6">
-                                <div>
-                                    <h3 className="font-semibold text-lg mb-2">Impact-Driven Bullets</h3>
-                                    <ul className="list-disc pl-5 space-y-1 text-sm">
-                                        {state.result.impactBullets.map((b: string, i: number) => <li key={i}>{b}</li>)}
-                                    </ul>
+                {/* Output (3 cols) */}
+                <div className="lg:col-span-3 space-y-4">
+                    {/* Provider badge */}
+                    {state?.provider && (
+                        <div className="flex items-center gap-2">
+                            <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${state.provider === "BYOK" ? "bg-green-500/15 text-green-400 border border-green-500/20"
+                                    : state.provider === "Demo (Shared Gemini)" ? "bg-blue-500/15 text-blue-400 border border-blue-500/20"
+                                        : "bg-white/5 text-muted-foreground border border-white/10"
+                                }`}>{state.provider}</span>
+                            {state.latencyMs && <span className="text-[10px] text-muted-foreground font-mono">{state.latencyMs}ms</span>}
+                        </div>
+                    )}
+
+                    {!state?.result ? (
+                        <div className="glass rounded-2xl flex flex-col items-center justify-center min-h-[500px] text-center p-8">
+                            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 flex items-center justify-center text-4xl mb-5 opacity-40">📄</div>
+                            <p className="text-muted-foreground text-sm font-medium">Your polished bullets will appear here</p>
+                            <p className="text-muted-foreground/50 text-xs mt-1">Fill out the form and click Generate</p>
+                        </div>
+                    ) : (
+                        <>
+                            <BulletSection title="Impact-Driven" icon="🎯" bullets={state.result.impactBullets} color="from-green-400 to-emerald-500" />
+                            <BulletSection title="Concise" icon="⚡" bullets={state.result.conciseBullets} color="from-blue-400 to-cyan-500" />
+                            <BulletSection title="Technical" icon="🛠" bullets={state.result.technicalBullets} color="from-violet-400 to-purple-500" />
+                            {state.result.whyItWorks && (
+                                <div className="glass rounded-2xl p-5">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span>💡</span>
+                                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Why It Works</span>
+                                    </div>
+                                    <p className="text-sm text-foreground/80 leading-relaxed italic">{state.result.whyItWorks}</p>
                                 </div>
-                                <div>
-                                    <h3 className="font-semibold text-lg mb-2">Concise Bullets</h3>
-                                    <ul className="list-disc pl-5 space-y-1 text-sm">
-                                        {state.result.conciseBullets.map((b: string, i: number) => <li key={i}>{b}</li>)}
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-lg mb-2">Technical Bullets</h3>
-                                    <ul className="list-disc pl-5 space-y-1 text-sm">
-                                        {state.result.technicalBullets.map((b: string, i: number) => <li key={i}>{b}</li>)}
-                                    </ul>
-                                </div>
-                                <div className="bg-background border p-3 rounded text-sm italic">
-                                    <strong>Why it works:</strong> {state.result.whyItWorks}
-                                </div>
-                                {/* Simulated PDF Export */}
-                                <Button variant="outline" className="w-full" onClick={() => window.print()}>
-                                    Export to PDF (Print)
-                                </Button>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                            )}
+                            <button onClick={() => window.print()} className="w-full py-2.5 rounded-xl glass glass-hover text-xs font-semibold">
+                                🖨️ Export to PDF (Print)
+                            </button>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
