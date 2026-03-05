@@ -1,0 +1,10 @@
+
+> web@0.1.0 build /Users/rajkashikar/MicroSaaS-Factory/apps/web
+> next build
+
+  ▲ Next.js 14.2.35
+
+   Creating an optimized production build ...
+/Users/rajkashikar/MicroSaaS-Factory/apps/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  web@0.1.0 build: `next build`
+Exit status 1

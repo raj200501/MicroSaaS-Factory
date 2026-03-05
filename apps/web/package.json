@@ -6,26 +6,33 @@
         "dev": "next dev --port 3000",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "generate:stubs": "tsx scripts/generate-stubs.ts"
     },
     "dependencies": {
+        "@microsaas/auth": "workspace:*",
+        "@microsaas/content": "workspace:*",
+        "@microsaas/core": "workspace:*",
+        "@microsaas/db": "workspace:*",
+        "@microsaas/ui": "workspace:*",
+        "lucide-react": "^0.344.0",
+        "marked": "^17.0.4",
         "next": "^14.1.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "@microsaas/core": "workspace:*",
-        "@microsaas/ui": "workspace:*",
-        "@microsaas/auth": "workspace:*",
-        "@microsaas/content": "workspace:*",
-        "lucide-react": "^0.344.0"
+        "tailwindcss-animate": "^1.0.7"
     },
     "devDependencies": {
+        "@microsaas/config": "workspace:*",
+        "@types/fs-extra": "^11.0.4",
         "@types/node": "^20.11.20",
         "@types/react": "^18.2.61",
         "@types/react-dom": "^18.2.19",
-        "@microsaas/config": "workspace:*",
         "autoprefixer": "^10.4.17",
+        "fs-extra": "^11.2.0",
         "postcss": "^8.4.35",
         "tailwindcss": "^3.4.1",
+        "tsx": "^4.7.1",
         "typescript": "^5.0.0"
     }
 }

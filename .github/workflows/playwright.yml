@@ -1,0 +1,46 @@
+name: Automated Screenshots (Playwright)
+
+on:
+  push:
+    branches: ["main"]
+  schedule:
+    - cron: '0 0 * * 0' # Weekly
+
+jobs:
+  e2e:
+    name: Generate Screenshots & Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run E2E Tests & Capture Screenshots
+        run: pnpm test:e2e
+        env:
+          DATABASE_URL: "file:./local.db"
+          JWT_SECRET: "ci-dummy-secret"
+          CI: true
+
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: apps/*/test-results/
+          retention-days: 7

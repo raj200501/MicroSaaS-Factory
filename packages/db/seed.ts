@@ -27,6 +27,15 @@ async function main() {
         },
     });
 
+    await prisma.workspaceConfig.upsert({
+        where: { workspaceId: workspace.id },
+        update: {},
+        create: {
+            workspaceId: workspace.id,
+            featureFlagsJson: JSON.stringify({ enableBetaFeatures: true, limitRuns: false }),
+        },
+    });
+
     const apps = [
         { slug: "resume", name: "Resume Bullet Factory", description: "Generate resume bullets." },
         { slug: "prd2jira", name: "PRD -> Tickets", description: "Convert PRDs to Jira tickets." },

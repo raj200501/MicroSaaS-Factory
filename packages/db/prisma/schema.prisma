@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id        String       @id @default(cuid())
-  email     String       @unique
-  name      String?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   memberships Membership[]
-  sessions  Session[]
+  sessions    Session[]
+  runs        MicroappRun[]
 }
 
 model Session {
@@ -26,15 +27,26 @@ model Session {
 }
 
 model Workspace {
-  id        String       @id @default(cuid())
-  name      String
-  slug      String       @unique
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   memberships Membership[]
-  installs  MicroappInstall[]
-  events    Event[]
-  llmKeys   LlmKey[]
+  installs    MicroappInstall[]
+  events      Event[]
+  llmKeys     LlmKey[]
+  config      WorkspaceConfig?
+  runs        MicroappRun[]
+}
+
+model WorkspaceConfig {
+  id               String    @id @default(cuid())
+  workspaceId      String    @unique
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  featureFlagsJson String?   // JSON object of feature flags
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model Membership {
@@ -58,6 +70,7 @@ model Microapp {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   installs    MicroappInstall[]
+  runs        MicroappRun[]
 }
 
 model MicroappInstall {
@@ -97,13 +110,32 @@ model EmailMessage {
 }
 
 model LlmKey {
-  id          String    @id @default(cuid())
-  workspaceId String
-  provider    String    // "openai", "anthropic"
-  key         String    // Obfuscated/encrypted in a real app, plaintext for local dev
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  workspaceId  String
+  provider     String    // "openai", "anthropic"
+  encryptedKey String    // Obfuscated/encrypted in a real app, plaintext for local dev
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@unique([workspaceId, provider])
+}
+
+model MicroappRun {
+  id           String    @id @default(cuid())
+  workspaceId  String
+  userId       String?
+  microappId   String
+  inputJson    String    // user inputs
+  outputJson   String?   // llm output
+  provider     String    // dummy, openai, anthropic
+  model        String?
+  latencyMs    Int?
+  status       String    // "success", "error"
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  microapp     Microapp  @relation(fields: [microappId], references: [id], onDelete: Cascade)
 }

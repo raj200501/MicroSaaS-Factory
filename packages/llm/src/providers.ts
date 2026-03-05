@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { generateText as aiGenerateText, generateObject as aiGenerateObject, LanguageModelV1 } from "ai";
+import { generateText as aiGenerateText, generateObject as aiGenerateObject, LanguageModel } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 
@@ -17,30 +17,31 @@ export interface GenerateOptions {
 
 export interface GenerateObjectOptions<T extends z.ZodType> extends GenerateOptions {
     schema: T;
+    mockResponse?: z.infer<T>;
 }
 
-// Dummy LanguageModelV1 implementation for local dev
-const dummyModel: LanguageModelV1 = {
+// Dummy LanguageModel implementation for local dev (cast to bypass strict interface checks)
+const dummyModel = {
     specificationVersion: 'v1',
     provider: 'dummy',
     modelId: 'dummy-model',
     defaultObjectGenerationMode: 'json',
-    async doGenerate(options) {
-        const isObject = options.mode.type === "object-json";
+    async doGenerate(options: any) {
+        const isObject = options?.mode?.type === "object-json";
         const text = isObject ? "{\"dummy\": \"response\"}" : "This is a dummy response from the local LLM stub.";
         return {
             text,
             usage: { promptTokens: 10, completionTokens: 10 },
-            finishReason: 'stop',
-            rawCall: { rawPrompt: options.prompt, rawSettings: {} },
+            finishReason: 'stop' as const,
+            rawCall: { rawPrompt: options?.prompt, rawSettings: {} },
         };
     },
-    async doStream(options) {
+    async doStream(_options: any) {
         throw new Error("Stream not implemented for dummy model");
     }
-};
+} as unknown as LanguageModel;
 
-function getModel(provider: LLMProviderType, apiKey?: string, modelId?: string): LanguageModelV1 {
+function getModel(provider: LLMProviderType, apiKey?: string, modelId?: string): LanguageModel {
     if (provider === "dummy") {
         return dummyModel;
     }
@@ -66,7 +67,6 @@ export async function generateText(options: GenerateOptions) {
         system: options.system,
         prompt: options.prompt,
         temperature: options.temperature,
-        maxTokens: options.maxTokens,
     });
 
     return result.text;
@@ -81,10 +81,10 @@ export async function generateObject<T extends z.ZodType>(options: GenerateObjec
     // Actually, let's make dummy return an empty object that bypasses validation just for local dev, 
     // or better, intercept it.
     if (options.provider === "dummy" || !options.apiKey) {
-        // Return a deeply hollowed out mock or just a basic object that conforms via partial mocking?
-        // This is hard to do generically without a library like 'zocker'. 
-        // We'll return an empty object and cast it, logging a warning.
         console.warn("[LLM] Mocking object generation for dummy provider.");
+        if (options.mockResponse) {
+            return options.mockResponse;
+        }
         return {} as z.infer<T>;
     }
 

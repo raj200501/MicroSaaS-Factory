@@ -1,0 +1,417 @@
+[
+    {
+        "name": "Email Subject Line Generator",
+        "slug": "email-subject",
+        "description": "Generate high-converting email subject lines.",
+        "inputs": [
+            {
+                "name": "topic",
+                "label": "Email Topic",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "5 catchy subject lines"
+    },
+    {
+        "name": "Tweet Thread Writer",
+        "slug": "tweet-thread",
+        "description": "Convert an idea into a 5-tweet thread.",
+        "inputs": [
+            {
+                "name": "idea",
+                "label": "Core Idea",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "A 5-part twitter thread"
+    },
+    {
+        "name": "SEO Meta Description",
+        "slug": "seo-meta",
+        "description": "Generate SEO meta descriptions.",
+        "inputs": [
+            {
+                "name": "title",
+                "label": "Page Title",
+                "type": "text"
+            },
+            {
+                "name": "keywords",
+                "label": "Keywords",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "3 SEO meta descriptions"
+    },
+    {
+        "name": "Blog Post Outline",
+        "slug": "blog-outline",
+        "description": "Create a structured outline for your blog post.",
+        "inputs": [
+            {
+                "name": "topic",
+                "label": "Blog Topic",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A complete outline with headings"
+    },
+    {
+        "name": "YouTube Video Ideas",
+        "slug": "youtube-ideas",
+        "description": "Brainstorm YouTube video concepts.",
+        "inputs": [
+            {
+                "name": "niche",
+                "label": "Channel Niche",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "10 viral video ideas"
+    },
+    {
+        "name": "Product Description Writer",
+        "slug": "product-desc",
+        "description": "Write compelling e-commerce product descriptions.",
+        "inputs": [
+            {
+                "name": "product",
+                "label": "Product Name",
+                "type": "text"
+            },
+            {
+                "name": "features",
+                "label": "Key Features",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A persuasive product description"
+    },
+    {
+        "name": "Ad Copy Generator",
+        "slug": "ad-copy",
+        "description": "Generate Facebook Ad copy.",
+        "inputs": [
+            {
+                "name": "offer",
+                "label": "The Offer",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "3 variations of ad copy"
+    },
+    {
+        "name": "Cold Outreach Email",
+        "slug": "cold-email",
+        "description": "Write a B2B cold email.",
+        "inputs": [
+            {
+                "name": "target",
+                "label": "Target Audience",
+                "type": "text"
+            },
+            {
+                "name": "valueProp",
+                "label": "Value Proposition",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A personalized cold email"
+    },
+    {
+        "name": "Press Release Draft",
+        "slug": "press-release",
+        "description": "Draft a standard press release.",
+        "inputs": [
+            {
+                "name": "announcement",
+                "label": "The Announcement",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "A formatted press release"
+    },
+    {
+        "name": "Cover Letter Builder",
+        "slug": "cover-letter",
+        "description": "Generate a cover letter for a job application.",
+        "inputs": [
+            {
+                "name": "role",
+                "label": "Job Title",
+                "type": "text"
+            },
+            {
+                "name": "experience",
+                "label": "Your Experience",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "A professional cover letter"
+    },
+    {
+        "name": "Welcome Email Sequence",
+        "slug": "welcome-email",
+        "description": "Draft a 3-part welcome email sequence.",
+        "inputs": [
+            {
+                "name": "brand",
+                "label": "Brand Name",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "3 onboarding emails"
+    },
+    {
+        "name": "Sales Script",
+        "slug": "sales-script",
+        "description": "Generate a cold-calling script.",
+        "inputs": [
+            {
+                "name": "product",
+                "label": "Product Info",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A proven phone script"
+    },
+    {
+        "name": "Interview Questions",
+        "slug": "interview-qa",
+        "description": "Generate interview questions for a role.",
+        "inputs": [
+            {
+                "name": "role",
+                "label": "Job Role",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "10 behavioral and technical questions"
+    },
+    {
+        "name": "User Persona Creator",
+        "slug": "user-persona",
+        "description": "Create a detailed user persona.",
+        "inputs": [
+            {
+                "name": "demographic",
+                "label": "Target Demographic",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A comprehensive buyer persona"
+    },
+    {
+        "name": "FAQ Generator",
+        "slug": "faq-gen",
+        "description": "Generate FAQs for a webpage.",
+        "inputs": [
+            {
+                "name": "service",
+                "label": "Service Details",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "5 common FAQs and answers"
+    },
+    {
+        "name": "Slogan Maker",
+        "slug": "slogan-maker",
+        "description": "Create catchy brand slogans.",
+        "inputs": [
+            {
+                "name": "brand",
+                "label": "Brand / Industry",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "10 bold slogans"
+    },
+    {
+        "name": "Value Prop Canvas",
+        "slug": "value-prop",
+        "description": "Define a value proposition.",
+        "inputs": [
+            {
+                "name": "customer",
+                "label": "Customer Pain Point",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A value proposition statement"
+    },
+    {
+        "name": "Testimonial Rewriter",
+        "slug": "test-rewrite",
+        "description": "Polish up rough user reviews.",
+        "inputs": [
+            {
+                "name": "review",
+                "label": "Raw Review",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "A polished, marketing-ready testimonial"
+    },
+    {
+        "name": "Job Description Writer",
+        "slug": "job-desc",
+        "description": "Write a compelling job posting.",
+        "inputs": [
+            {
+                "name": "title",
+                "label": "Job Title",
+                "type": "text"
+            },
+            {
+                "name": "reqs",
+                "label": "Requirements",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A formatted job description"
+    },
+    {
+        "name": "Mission Statement",
+        "slug": "mission",
+        "description": "Draft a corporate mission statement.",
+        "inputs": [
+            {
+                "name": "coreValues",
+                "label": "Core Values",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A powerful mission statement"
+    },
+    {
+        "name": "Elevator Pitch",
+        "slug": "elevator-pitch",
+        "description": "Create a 30-second elevator pitch.",
+        "inputs": [
+            {
+                "name": "startup",
+                "label": "What does your startup do?",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "A concise pitch"
+    },
+    {
+        "name": "Naming Assistant",
+        "slug": "namer",
+        "description": "Brainstorm project names.",
+        "inputs": [
+            {
+                "name": "keywords",
+                "label": "Keywords",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "20 creative names"
+    },
+    {
+        "name": "Course Curriculum",
+        "slug": "course-curriculum",
+        "description": "Outline an online course.",
+        "inputs": [
+            {
+                "name": "topic",
+                "label": "Subject Matter",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A 5-module course syllabus"
+    },
+    {
+        "name": "Podcast Intro",
+        "slug": "podcast-intro",
+        "description": "Write a script for a podcast intro.",
+        "inputs": [
+            {
+                "name": "show",
+                "label": "Show Name/Host",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A catchy 60-second intro script"
+    },
+    {
+        "name": "Landing Page Copy",
+        "slug": "landing-page",
+        "description": "Draft copy for a hero section.",
+        "inputs": [
+            {
+                "name": "product",
+                "label": "Product details",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "Headline, Subheadline, CTA"
+    },
+    {
+        "name": "Newsletter Ideas",
+        "slug": "newsletter",
+        "description": "Generate weekly newsletter topics.",
+        "inputs": [
+            {
+                "name": "niche",
+                "label": "Your Niche",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "4 upcoming newsletter ideas"
+    },
+    {
+        "name": "Rewrite for 5yo",
+        "slug": "eli5",
+        "description": "Simplify complex text (ELI5).",
+        "inputs": [
+            {
+                "name": "text",
+                "label": "Complex Text",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "A simple explanation"
+    },
+    {
+        "name": "Code Explainer",
+        "slug": "code-explain",
+        "description": "Explain a snippet of code.",
+        "inputs": [
+            {
+                "name": "code",
+                "label": "Code Snippet",
+                "type": "textarea"
+            }
+        ],
+        "outputDescription": "A plain English explanation"
+    },
+    {
+        "name": "Regex Generator",
+        "slug": "regex-gen",
+        "description": "Generate Regular Expressions.",
+        "inputs": [
+            {
+                "name": "intent",
+                "label": "What should it match?",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A regex pattern and explanation"
+    },
+    {
+        "name": "SQL Query Builder",
+        "slug": "sql-gen",
+        "description": "Convert English to SQL.",
+        "inputs": [
+            {
+                "name": "query",
+                "label": "Plain English Query",
+                "type": "text"
+            }
+        ],
+        "outputDescription": "A raw SQL string"
+    }
+]

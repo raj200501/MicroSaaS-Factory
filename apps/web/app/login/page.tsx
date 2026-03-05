@@ -1,18 +1,32 @@
 import { Button, Input, Label, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@microsaas/ui";
+import { prisma } from "@microsaas/db";
+import { createSession } from "@microsaas/auth/session";
+import { setSessionCookie } from "@microsaas/auth/next";
+import { redirect } from "next/navigation";
 
 export default function LoginPage() {
+    async function handleLogin(formData: FormData) {
+        "use server";
+        const email = formData.get("email") as string;
+
+        if (!email) return;
+
+        // For local dev, instantly verify and log them in
+        let user = await prisma.user.findUnique({ where: { email } });
+        if (!user) {
+            user = await prisma.user.create({ data: { email } });
+        }
+
+        const { token } = await createSession(user.id);
+        await setSessionCookie(token);
+
+        redirect("http://localhost:3001"); // Redirect to Studio
+    }
+
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
             <Card className="w-full max-w-sm">
-                <form action={async (formData) => {
-                    "use server";
-                    // Local dev magic link stub: immediately create session or simulate sending email
-                    const email = formData.get("email") as string;
-                    console.log("Login requested for:", email);
-                    // In a real app we would call something like:
-                    // await auth.sendMagicLink(email)
-                    // For now, this is a visual stub for the web app auth flow
-                }}>
+                <form action={handleLogin}>
                     <CardHeader>
                         <CardTitle className="text-2xl">Login</CardTitle>
                         <CardDescription>
@@ -24,9 +38,8 @@ export default function LoginPage() {
                             <Label htmlFor="email">Email</Label>
                             <Input id="email" name="email" type="email" placeholder="m@example.com" required />
                         </div>
-                        {/* For local dev testing, bypass magic link */}
                         <p className="text-xs text-muted-foreground text-center">
-                            (Local Dev: Submitting will stub auth and redirect to Studio)
+                            (Local Dev: Submitting will instantly log you in and redirect to Studio)
                         </p>
                     </CardContent>
                     <CardFooter>

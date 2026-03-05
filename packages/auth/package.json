@@ -3,13 +3,21 @@
     "version": "0.1.0",
     "private": true,
     "main": "src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./session": "./src/session.ts",
+        "./next": "./src/next.ts",
+        "./edge": "./src/edge.ts",
+        "./components": "./src/components.tsx"
+    },
     "dependencies": {
-        "jose": "^5.2.2",
         "@microsaas/core": "workspace:*",
-        "@microsaas/db": "workspace:*"
+        "@microsaas/db": "workspace:*",
+        "jose": "^5.2.2",
+        "next": "^14.1.0"
     },
     "devDependencies": {
-        "typescript": "^5.0.0",
-        "@microsaas/config": "workspace:*"
+        "@microsaas/config": "workspace:*",
+        "typescript": "^5.0.0"
     }
 }
