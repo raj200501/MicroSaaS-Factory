@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TOOLS, TOOL_CATEGORIES } from "./tools/_lib/tool-defs";
 
 const stats = [
     { value: "30+", label: "AI Microapps" },
@@ -11,7 +12,7 @@ const features = [
     {
         icon: "🧠",
         title: "BYOK LLM Support",
-        description: "Bring your own OpenAI or Anthropic key, or use the built-in DummyProvider for free local development.",
+        description: "Bring your own OpenAI, Gemini, or Anthropic key — or use DummyProvider for free local dev.",
     },
     {
         icon: "🗄️",
@@ -21,7 +22,7 @@ const features = [
     {
         icon: "🔐",
         title: "Built-in Auth & Sessions",
-        description: "Cookie-based authentication with Edge middleware. Secure by default, zero third-party auth providers.",
+        description: "Cookie-based authentication with Edge middleware. Secure by default, zero third-party providers.",
     },
     {
         icon: "📦",
@@ -31,7 +32,7 @@ const features = [
     {
         icon: "🎯",
         title: "Server Actions",
-        description: "Each microapp uses Next.js Server Actions for clean, type-safe AI generation without API routes.",
+        description: "Each tool uses Next.js Server Actions for clean, type-safe AI generation without API routes.",
     },
     {
         icon: "🚀",
@@ -40,13 +41,11 @@ const features = [
     },
 ];
 
-const realApps = [
-    { name: "Resume Builder", slug: "resume", description: "Generate impact-driven resume bullets from your experience.", emoji: "📝" },
-    { name: "PRD → Jira", slug: "prd2jira", description: "Convert product requirement docs into structured epics and tickets.", emoji: "📋" },
-    { name: "Meeting Notes", slug: "meeting", description: "Extract action items and draft follow-up emails from meeting transcripts.", emoji: "🎙️" },
-];
-
 export default function Home() {
+    // Pick 8 featured tools (hand-picked variety across categories)
+    const featuredSlugs = ["resume", "cold-email", "tweet-thread", "prd2jira", "ad-copy", "code-explain", "blog-outline", "elevator-pitch"];
+    const featuredTools = featuredSlugs.map(s => TOOLS.find(t => t.slug === s)!).filter(Boolean);
+
     return (
         <div className="relative">
             {/* Gradient background orbs */}
@@ -70,7 +69,7 @@ export default function Home() {
                     </p>
                     <div className="flex flex-wrap gap-4 justify-center">
                         <Link
-                            href="/showcase"
+                            href="/tools"
                             className="px-8 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:from-purple-500 hover:to-indigo-500 transition-all glow text-sm"
                         >
                             Explore 30+ Tools →
@@ -97,6 +96,80 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* Featured Tools */}
+            <section className="container mx-auto px-4 md:px-6 py-16">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-bold mb-4">
+                        <span className="gradient-text">30+ AI Tools</span>, All Working
+                    </h2>
+                    <p className="text-muted-foreground max-w-xl mx-auto">
+                        Every tool works instantly — no signup, no API key required. Here are some of the most popular.
+                    </p>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {featuredTools.map((tool) => (
+                        <Link
+                            key={tool.slug}
+                            href={`/tools/${tool.slug}`}
+                            className="group glass rounded-2xl p-5 glass-hover block relative overflow-hidden"
+                        >
+                            <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`} />
+                            <div className="relative">
+                                <div className="flex items-start gap-3">
+                                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-lg shrink-0 shadow-lg`}>
+                                        {tool.icon}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="font-semibold text-sm group-hover:text-white transition-colors truncate">
+                                            {tool.name}
+                                        </h3>
+                                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                                            {tool.description}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="mt-3 flex items-center justify-between">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                                        <span className="text-[10px] text-green-400 font-bold uppercase tracking-wider">Live</span>
+                                    </div>
+                                    <span className="text-[10px] text-muted-foreground/60 group-hover:text-primary transition-colors">
+                                        Try it →
+                                    </span>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Category chips */}
+                <div className="mt-8 flex flex-wrap justify-center gap-2">
+                    {TOOL_CATEGORIES.map((cat) => {
+                        const count = TOOLS.filter(t => t.category === cat.id).length;
+                        return (
+                            <Link
+                                key={cat.id}
+                                href={`/tools#${cat.id}`}
+                                className="text-xs px-3 py-1.5 rounded-full glass glass-hover font-medium flex items-center gap-1.5"
+                            >
+                                <span>{cat.icon}</span>
+                                <span>{cat.label}</span>
+                                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/5 text-muted-foreground">{count}</span>
+                            </Link>
+                        );
+                    })}
+                </div>
+
+                <div className="text-center mt-8">
+                    <Link
+                        href="/tools"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:from-purple-500 hover:to-indigo-500 transition-all text-sm"
+                    >
+                        View All {TOOLS.length} Tools →
+                    </Link>
+                </div>
+            </section>
+
             {/* Features */}
             <section className="container mx-auto px-4 md:px-6 py-16">
                 <div className="text-center mb-12">
@@ -111,32 +184,6 @@ export default function Home() {
                             <div className="text-3xl mb-4 group-hover:animate-float">{f.icon}</div>
                             <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
                             <p className="text-sm text-muted-foreground">{f.description}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Real Apps */}
-            <section className="container mx-auto px-4 md:px-6 py-16">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold mb-4">3 Fully Functional Microapps</h2>
-                    <p className="text-muted-foreground max-w-xl mx-auto">
-                        Real apps with real server actions, LLM integration, and export functionality.
-                    </p>
-                </div>
-                <div className="grid gap-6 md:grid-cols-3">
-                    {realApps.map((app) => (
-                        <div key={app.slug} className="glass rounded-xl p-8 glass-hover group relative overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <div className="relative">
-                                <div className="text-4xl mb-4">{app.emoji}</div>
-                                <h3 className="font-bold text-xl mb-2">{app.name}</h3>
-                                <p className="text-sm text-muted-foreground mb-6">{app.description}</p>
-                                <div className="flex gap-2">
-                                    <span className="px-2 py-0.5 rounded text-xs bg-green-500/20 text-green-300 border border-green-500/30">Live</span>
-                                    <span className="px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-300 border border-purple-500/30">Server Actions</span>
-                                </div>
-                            </div>
                         </div>
                     ))}
                 </div>
