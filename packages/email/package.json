@@ -1,0 +1,13 @@
+{
+    "name": "@microsaas/email",
+    "version": "0.1.0",
+    "private": true,
+    "main": "src/index.ts",
+    "dependencies": {
+        "@microsaas/db": "workspace:*"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "@microsaas/config": "workspace:*"
+    }
+}

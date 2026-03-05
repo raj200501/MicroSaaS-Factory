@@ -1,0 +1,13 @@
+{
+    "extends": "@microsaas/config/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "dist"
+    },
+    "include": [
+        "*.ts",
+        "prisma/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

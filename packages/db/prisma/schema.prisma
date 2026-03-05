@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String       @id @default(cuid())
+  email     String       @unique
+  name      String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  memberships Membership[]
+  sessions  Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Workspace {
+  id        String       @id @default(cuid())
+  name      String
+  slug      String       @unique
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  memberships Membership[]
+  installs  MicroappInstall[]
+  events    Event[]
+  llmKeys   LlmKey[]
+}
+
+model Membership {
+  id          String    @id @default(cuid())
+  role        String    @default("member") // "admin", "member"
+  userId      String
+  workspaceId String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, workspaceId])
+}
+
+model Microapp {
+  id          String            @id @default(cuid())
+  slug        String            @unique
+  name        String
+  description String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  installs    MicroappInstall[]
+}
+
+model MicroappInstall {
+  id          String    @id @default(cuid())
+  workspaceId String
+  microappId  String
+  config      String?   // JSON configuration
+  enabled     Boolean   @default(true)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  microapp    Microapp  @relation(fields: [microappId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([workspaceId, microappId])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  workspaceId String
+  microappId  String?
+  userId      String?
+  action      String
+  metadata    String?   // JSON metadata
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model EmailMessage {
+  id        String   @id @default(cuid())
+  to        String
+  from      String
+  subject   String
+  bodyText  String
+  bodyHtml  String?
+  status    String   @default("sent") // captured locally
+  createdAt DateTime @default(now())
+}
+
+model LlmKey {
+  id          String    @id @default(cuid())
+  workspaceId String
+  provider    String    // "openai", "anthropic"
+  key         String    // Obfuscated/encrypted in a real app, plaintext for local dev
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([workspaceId, provider])
+}
