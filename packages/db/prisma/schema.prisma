@@ -139,3 +139,24 @@ model MicroappRun {
   user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   microapp     Microapp  @relation(fields: [microappId], references: [id], onDelete: Cascade)
 }
+
+model ApiUsage {
+  id     String   @id @default(cuid())
+  day    String
+  ipHash String
+  count  Int      @default(0)
+  lastAt DateTime @default(now())
+
+  @@unique([day, ipHash])
+}
+
+model LlmCache {
+  id         String   @id @default(cuid())
+  cacheKey   String   @unique
+  provider   String
+  model      String
+  inputHash  String
+  outputJson String
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+}

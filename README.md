@@ -81,11 +81,21 @@ MicroSaaS-Factory/
 
 ## 🧠 LLM Providers
 
-| Provider | Requires Key | Use Case |
-|----------|-------------|----------|
-| DummyProvider | No | Local dev, demos, testing |
-| OpenAI | Yes (BYOK) | Production with GPT-4 |
-| Anthropic | Yes (BYOK) | Production with Claude |
+| Provider | Requires Key | Mode | Use Case |
+|----------|-------------|------|----------|
+| DummyProvider | No | Local | Dev, testing (SchemaFiller generates realistic output) |
+| **Gemini** | Optional | Demo/BYOK | Set `GEMINI_API_KEY` env — auto-used for hosted demo |
+| OpenAI | Yes (BYOK) | BYOK | Production with GPT-4 |
+| Anthropic | Yes (BYOK) | BYOK | Production with Claude |
+
+**Provider resolution order:** BYOK key → Server Gemini key (demo mode) → DummyProvider
+
+```bash
+# Optional: enable real AI in demo mode (never commit this!)
+export GEMINI_API_KEY="your-key-here"
+```
+
+**Built-in abuse protection:** Per-IP rate limiting (20/day), global cap (200/day), response caching (7-day TTL), and math challenge bot guard — all using local SQLite.
 
 Add keys in Studio → LLM Keys. The system auto-falls back to DummyProvider when no key is configured.
 
