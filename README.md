@@ -7,12 +7,7 @@
   <strong>Zero paid SaaS · BYOK LLM · Local SQLite · Ship in minutes</strong>
 </p>
 
-<p align="center">
-  <a href="https://github.com/raj200501/MicroSaaS-Factory/actions"><img src="https://img.shields.io/github/actions/workflow/status/raj200501/MicroSaaS-Factory/ci.yml?label=CI&style=flat-square" alt="CI"></a>
-  <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-MIT%20%2B%20Commercial-blue?style=flat-square" alt="License"></a>
-  <a href="https://github.com/raj200501/MicroSaaS-Factory/stargazers"><img src="https://img.shields.io/github/stars/raj200501/MicroSaaS-Factory?style=flat-square" alt="Stars"></a>
-  <a href="https://github.com/raj200501/MicroSaaS-Factory/issues"><img src="https://img.shields.io/github/issues/raj200501/MicroSaaS-Factory?style=flat-square" alt="Issues"></a>
-</p>
+
 
 ---
 
