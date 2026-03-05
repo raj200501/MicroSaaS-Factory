@@ -22,7 +22,7 @@ MicroSaaS Factory is a **production-ready monorepo** for building single-purpose
 | 📝 Resume Builder | Impact-driven bullet generation with PDF export | ✅ Live |
 | 📋 PRD → Jira | Convert PRDs to epics and tickets (CSV/MD export) | ✅ Live |
 | 🎙️ Meeting Notes | Action items + follow-up email from transcripts | ✅ Live |
-| + 30 more | Email Subject Lines, Blog Outlines, Code Explainer, SQL Builder... | 🚧 Stubs |
+| + 30 more | Email Subject Lines, Blog Outlines, Code Explainer, SQL Builder... |
 
 ---
 
