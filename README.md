@@ -1,71 +1,183 @@
-# MicroSaaS Factory
+<p align="center">
+  <strong>⚡ MicroSaaS Factory</strong>
+</p>
 
-The **MicroSaaS Factory** is a local-first, production-ready monorepo designed to help you generate, build, and ship dozens of AI-powered microapps rapidly.
+<p align="center">
+  An open-source platform to build, ship & monetize 30+ AI-powered microapps.<br/>
+  <strong>Zero paid SaaS · BYOK LLM · Local SQLite · Ship in minutes</strong>
+</p>
 
-## Features
+<p align="center">
+  <a href="https://github.com/raj200501/MicroSaaS-Factory/actions"><img src="https://img.shields.io/github/actions/workflow/status/raj200501/MicroSaaS-Factory/ci.yml?label=CI&style=flat-square" alt="CI"></a>
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-MIT%20%2B%20Commercial-blue?style=flat-square" alt="License"></a>
+  <a href="https://github.com/raj200501/MicroSaaS-Factory/stargazers"><img src="https://img.shields.io/github/stars/raj200501/MicroSaaS-Factory?style=flat-square" alt="Stars"></a>
+  <a href="https://github.com/raj200501/MicroSaaS-Factory/issues"><img src="https://img.shields.io/github/issues/raj200501/MicroSaaS-Factory?style=flat-square" alt="Issues"></a>
+</p>
 
-- **Zero Paid SaaS Required**: Fully functional local environment with SQLite and stubbed providers.
-- **BYOK (Bring Your Own Key)**: Add OpenAI or Anthropic API keys per workspace in the Studio app.
-- **Local SQLite DB**: No external database connections needed for development.
-- **Cookie-Based Auth**: Secure HTTP-only cookies and Next.js Edge Middleware for authentication.
-- **Shared UI & Logic**: Monorepo structure using Turborepo and pnpm workspaces.
-- **Showcase & Stubs**: Automatically generate 30+ microapp stubs and view them in a beautiful showcase.
-- **Launch Kit Generator**: Instantly generate Product Hunt, X (Twitter), and Indie Hackers templates for your launches.
+---
 
-## Apps & Packages
+## ✨ What is this?
 
-- \`apps/web\`: Marketing site, Showcase, Documentation, and central Login.
-- \`apps/studio\`: Admin dashboard for managing workspaces, API keys, microapp installs, and viewing execution logs/emails.
-- \`apps/microapp-*\`: Individual AI microapps (e.g., Resume Builder, PRD to Jira, Meeting Notes).
-- \`packages/db\`: Prisma schema, local database, and generated client.
-- \`packages/auth\`: Shared session and middleware logic.
-- \`packages/llm\`: Abstracted AI generation handling Dummy, OpenAI, and Anthropic providers.
+MicroSaaS Factory is a **production-ready monorepo** for building single-purpose AI tools. Each microapp is a focused Next.js app that uses shared packages for auth, database, LLM, and UI — so you never write boilerplate again.
 
-## Getting Started
+**3 fully functional apps** are included, with **30 more stubs** ready to be built.
 
-### Prerequisites
-- Node.js (v18+)
-- pnpm (v8+)
+| App | Description | Status |
+|-----|-------------|--------|
+| 📝 Resume Builder | Impact-driven bullet generation with PDF export | ✅ Live |
+| 📋 PRD → Jira | Convert PRDs to epics and tickets (CSV/MD export) | ✅ Live |
+| 🎙️ Meeting Notes | Action items + follow-up email from transcripts | ✅ Live |
+| + 30 more | Email Subject Lines, Blog Outlines, Code Explainer, SQL Builder... | 🚧 Stubs |
 
-### Installation & Setup
+---
 
-1. **Install dependencies:**
-   \`\`\`bash
-   pnpm install
-   \`\`\`
+## 🚀 One-Command Setup
 
-2. **Initialize the database:**
-   \`\`\`bash
-   pnpm db:push
-   pnpm db:seed
-   \`\`\`
+```bash
+git clone https://github.com/raj200501/MicroSaaS-Factory.git
+cd MicroSaaS-Factory
+pnpm install
+pnpm db:push && pnpm db:seed
+pnpm dev
+```
 
-3. **Generate Microapp Stubs (Optional):**
-   \`\`\`bash
-   pnpm --filter web generate:stubs
-   \`\`\`
+**That's it.** No API keys needed. No external services. The DummyProvider handles everything locally.
 
-4. **Run the development servers:**
-   \`\`\`bash
-   pnpm dev
-   \`\`\`
+| Service | Port | Description |
+|---------|------|-------------|
+| Web App | 3000 | Landing, Showcase, Docs, Pricing |
+| Studio | 3001 | Admin dashboard |
+| Microapps | 3002+ | Individual AI tools |
 
-This will start:
-- Web App (Port 3000)
-- Studio App (Port 3001)
-- Microapps (Ports 3002+)
+---
 
-### Testing
+## 🏗️ Architecture
 
-For local testing without an API key, the LLM package automatically falls back to a **Dummy Provider**. It validates schemas and simulates latency without making external requests.
+```
+MicroSaaS-Factory/
+├── apps/
+│   ├── web/              # Marketing site + showcase + docs
+│   ├── studio/           # Admin dashboard  
+│   ├── microapp-resume/  # Resume Builder
+│   ├── microapp-prd2jira/# PRD to Jira
+│   └── microapp-meeting/ # Meeting Notes
+├── packages/
+│   ├── auth/             # Cookie-based auth + Edge middleware
+│   ├── db/               # Prisma + SQLite
+│   ├── llm/              # AI abstraction (Dummy/OpenAI/Anthropic)
+│   ├── ui/               # Shared components (shadcn-style)
+│   └── ...               # core, content, config, email, analytics
+├── docs/                 # Markdown documentation
+└── scripts/              # CLI tools & generators
+```
 
-### Launch Kit
-To generate your launch assets:
-\`\`\`bash
-pnpm --filter web generate:launch-kit
-\`\`\`
-Check the \`/launch-kit\` directory for your templates.
+**Key design decisions:**
+- **Server Actions** — no API routes for AI generation
+- **Edge Middleware** — auth checks at the CDN layer
+- **Monorepo** — Turborepo + pnpm workspaces
+- **Local-first** — SQLite for everything, zero external DBs
 
-## Architecture
+---
 
-This factory relies heavily on **Server Actions** to encapsulate specific AI behaviors into individual apps while reusing the core platform services (Auth, DB, Logging) via imported workspace packages. All executions, errors, and latencies are recorded locally in SQLite for easy auditing via the Studio app.
+## 🧠 LLM Providers
+
+| Provider | Requires Key | Use Case |
+|----------|-------------|----------|
+| DummyProvider | No | Local dev, demos, testing |
+| OpenAI | Yes (BYOK) | Production with GPT-4 |
+| Anthropic | Yes (BYOK) | Production with Claude |
+
+Add keys in Studio → LLM Keys. The system auto-falls back to DummyProvider when no key is configured.
+
+---
+
+## 📦 What's Included
+
+### Web App (`localhost:3000`)
+- 🎨 Premium dark-mode landing page with glassmorphism design
+- 🔍 Showcase with 33 microapp cards (filters, Live/Stub badges)
+- 📄 Individual microapp detail pages with OG images
+- 💰 Pricing page (Free / Commercial / Enterprise — no Stripe needed)
+- 📚 Documentation site rendering markdown docs
+- 🗺️ Roadmap showing what's live and what's next
+- 📜 License page explaining dual-license model
+- 🚀 Launch Kit page with pre-generated marketing content
+
+### Studio (`localhost:3001`)
+- 👥 Workspace management
+- 🔑 LLM key configuration (BYOK)
+- 📊 Execution logs with latency tracking
+- 📧 Local email capture
+
+### SEO & Social
+- Dynamic `sitemap.xml` with all 33+ routes
+- `robots.txt` configuration
+- OpenGraph image generation (Edge, no external services)
+- JSON-LD structured data per microapp
+
+---
+
+## 🎯 How It Can Make Money
+
+This isn't just a demo — it's designed with real monetization paths:
+
+| Path | Effort | Implementation |
+|------|--------|---------------|
+| **Commercial License** | Low | One-time $99 license for businesses (see `/pricing`) |
+| **GitHub Sponsors** | Low | Recurring support from developers who use it |
+| **Custom Builds** | Medium | Build bespoke microapps for clients (see `/hire`) |
+| **SaaS Deployment** | High | Deploy as a hosted platform with usage-based pricing |
+
+All monetization works with **zero payment infrastructure** — just email and GitHub Sponsors links.
+
+---
+
+## 🛠 Available Scripts
+
+```bash
+pnpm dev              # Start all apps in development
+pnpm build            # Build all packages and apps
+pnpm db:push          # Push Prisma schema to SQLite
+pnpm db:seed          # Seed database with sample data
+pnpm generate:launch-kit  # Generate marketing content (no LLM needed)
+```
+
+---
+
+## 🚢 Deployment
+
+### Vercel (Free Tier)
+Each app can be deployed as a separate Vercel project pointing to its `apps/` subdirectory.
+
+### Cloudflare Pages (Free Tier)
+Export as static where possible, use Workers for server-side routes.
+
+### Self-Hosted
+Any Node.js 18+ host. Just `pnpm build && pnpm start`.
+
+**Zero external services required.** SQLite file is the only state.
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/amazing`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing`)
+5. Open a Pull Request
+
+See [docs/ADD_A_MICROAPP.md](docs/ADD_A_MICROAPP.md) for microapp scaffolding guide.
+
+---
+
+## 📜 License
+
+**Personal use:** [MIT License](LICENSE.md)  
+**Commercial use:** [One-time license](LICENSE.md#commercial-use) — email raj200501@gmail.com
+
+---
+
+<p align="center">
+  <strong>Built with ❤️ and ⚡ by <a href="https://github.com/raj200501">raj200501</a></strong>
+</p>

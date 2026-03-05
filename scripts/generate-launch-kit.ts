@@ -1,121 +1,117 @@
-import fs from "fs-extra";
+import fs from "fs";
 import path from "path";
 
-const LAUNCH_KIT_DIR = path.resolve(__dirname, "../../launch-kit");
-const BASE_DOCS_DIR = path.resolve(__dirname, "../../docs");
+const microappsPath = path.join(__dirname, "../docs/microapps-30.json");
+const apps = JSON.parse(fs.readFileSync(microappsPath, "utf8")) as Array<{ name: string; slug: string; description: string }>;
+const outputDir = path.join(__dirname, "../docs/launch");
 
-async function generateLaunchKit() {
-    console.log("🚀 Generating Launch Kit from the MicroSaaS Factory...");
+if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
-    await fs.ensureDir(LAUNCH_KIT_DIR);
+// LinkedIn Posts
+const linkedinPosts = apps.map((app, i) => `
+## Post ${i + 1}: ${app.name}
 
-    // 1. Generate Product Hunt Launch Template
-    const phTemplate = `# Product Hunt Launch Template
+🚀 Just shipped: **${app.name}**
 
-## Tagline
-(Short & punchy, under 60 chars) e.g. "Generate ATS-friendly resumes in seconds with AI"
+${app.description}
 
-## Description
-(2-3 short sentences about what it does and who it's for)
+Built it as part of MicroSaaS Factory — an open-source platform with 30+ AI microapps.
 
-## First Comment / Maker's Comment
-Hey Product Hunt! 👋 I'm [Your Name], the maker of [MicroApp Name].
+No paid SaaS. No vendor lock-in. Just clone, run, and ship.
 
-I built this because [problem you faced]. It solves it by [how it works].
-Features:
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
+What microapp would save YOU 2 hours this week?
 
-Would love to hear your feedback! Let me know in the comments below.
+🔗 Try it: github.com/raj200501/MicroSaaS-Factory
 
-## Launch Assets Required
-- [ ] 1x Gallery Image (1270x760 or 2540x1520)
-- [ ] 1x Square Logo (240x240 minimum)
-- [ ] 1x Video Demo (Optional but recommended)
+#buildinpublic #opensource #ai #saas #microapps
+`).join("\n---\n");
+fs.writeFileSync(path.join(outputDir, "30_linkedin_posts.md"), `# LinkedIn Posts\n\n30 ready-to-post LinkedIn updates for building in public.\n${linkedinPosts}`);
+
+// Showcase Threads
+const threads = apps.slice(0, 10).map((app, i) => `
+## Thread ${i + 1}: ${app.name}
+
+**Tweet 1:** 🧵 I built ${app.name} in 30 minutes using MicroSaaS Factory.
+
+Here's what it does and how you can build one too ↓
+
+**Tweet 2:** ${app.description}
+
+It uses Next.js Server Actions + a DummyProvider so you don't even need an API key to test.
+
+**Tweet 3:** The architecture: Turborepo monorepo → shared packages (auth, db, llm, ui) → individual microapp that just focuses on its ONE job.
+
+**Tweet 4:** Want to build your own? One command:
+
+git clone https://github.com/raj200501/MicroSaaS-Factory && pnpm install && pnpm dev
+
+**Tweet 5:** This is part of a 30+ microapp platform. All open source. Zero paid SaaS.
+
+⭐ Star it: github.com/raj200501/MicroSaaS-Factory
+`).join("\n---\n");
+fs.writeFileSync(path.join(outputDir, "10_showcase_threads.md"), `# X/Twitter Showcase Threads\n\n10 tweet threads showcasing individual microapps.\n${threads}`);
+
+// Product Hunt Blurbs
+const phBlurbs = apps.slice(0, 10).map((app, i) => `
+## ${i + 1}. ${app.name}
+
+**Tagline:** ${app.description}
+
+**Description:**
+${app.name} is one of 30+ AI microapps in MicroSaaS Factory — an open-source platform that lets you build and ship single-purpose AI tools in minutes.
+
+No monthly fees. No vendor lock-in. Bring your own API key or use the built-in dummy provider for free.
+
+**First Comment:**
+Hey PH! 👋 I built MicroSaaS Factory because I was tired of setting up the same boilerplate for every AI tool I wanted to build. Now it's a platform with 30+ tools and counting. Would love your feedback!
+`).join("\n---\n");
+fs.writeFileSync(path.join(outputDir, "10_producthunt_blurbs.md"), `# Product Hunt Blurbs\n\n10 ready-to-submit Product Hunt descriptions.\n${phBlurbs}`);
+
+// Press Kit
+const pressKit = `# MicroSaaS Factory — Press Kit
+
+## One-Liner
+Open-source platform to build, ship, and monetize 30+ AI-powered microapps with zero paid SaaS dependencies.
+
+## Problem
+Developers waste weeks on boilerplate (auth, database, UI, LLM integration) before they can even start building their AI tool idea.
+
+## Solution
+MicroSaaS Factory is a production-ready monorepo with everything pre-wired: authentication, database, LLM abstraction, shared UI components, and 30+ microapp templates. Clone it, customize it, ship it.
+
+## Key Features
+- **30+ AI Microapps** — from Resume Builder to SQL Generator
+- **Zero Paid SaaS** — runs entirely on local SQLite
+- **BYOK LLM** — bring OpenAI/Anthropic keys or use free DummyProvider
+- **Monorepo Architecture** — Turborepo + pnpm workspaces
+- **Server Actions** — clean, type-safe AI generation
+- **3 Fully Functional Apps** — Resume Builder, PRD→Jira, Meeting Notes
+
+## Tech Stack
+Next.js 14, TypeScript, Prisma, SQLite, Turborepo, pnpm, Tailwind CSS, Vercel AI SDK
+
+## Links
+- GitHub: https://github.com/raj200501/MicroSaaS-Factory
+- Website: https://microsaas.dev
+
+## FAQs
+
+**Q: Is this really free?**
+A: Yes. Personal use is MIT licensed. Commercial use requires a one-time license.
+
+**Q: Do I need API keys?**
+A: No. The DummyProvider works without any keys. Add OpenAI or Anthropic keys when you're ready.
+
+**Q: Can I deploy this?**
+A: Yes. Works on Vercel, Cloudflare Pages, or any Node.js host. Zero external services needed.
+
+**Q: How do I make money with this?**
+A: Use it as a foundation for your own SaaS. Each microapp can be a standalone product.
 `;
-    await fs.writeFile(path.join(LAUNCH_KIT_DIR, "product-hunt-template.md"), phTemplate, "utf8");
-    console.log("✅ Created Product Hunt Template");
+fs.writeFileSync(path.join(outputDir, "press_kit.md"), pressKit);
 
-    // 2. Generate Twitter/X Thread Template
-    const twitterTemplate = `🚀 Just launched [MicroApp Name]!
-
-Tired of [problem]? Me too. That's why I built a highly focused tool to solve it using AI.
-
-Here's how it works 👇
-
-🧵 1/5
-
----
-
-**Step 1:** [Input mechanism - e.g. "Paste your notes here"]
-[Screenshot of input UI]
-
-🧵 2/5
-
----
-
-**Step 2:** [Processing/Magic - e.g. "AI extracts the required actions"]
-It runs on [technology/model], so it's crazy fast.
-
-🧵 3/5
-
----
-
-**Step 3:** [Output - e.g. "Export straight to Jira or download as CSV"]
-[Screenshot of output]
-
-🧵 4/5
-
----
-
-Built entirely on the MicroSaaS Factory. Shipped from idea to production in [X] days.
-
-Try it out here: [Link to app]
-Would love your feedback! Let me know what you think below. RTs appreciated! 🙏
-
-🧵 5/5
-`;
-    await fs.writeFile(path.join(LAUNCH_KIT_DIR, "twitter-thread-template.md"), twitterTemplate, "utf8");
-    console.log("✅ Created Twitter Thread Template");
-
-    // 3. Generate Indie Hackers Post Template
-    const ihTemplate = `# How I built and launched [MicroApp Name] in a weekend
-
-Hey IHers,
-
-I recently launched [MicroApp Name], a tool that [what it does].
-
-### The Idea
-I was struggling with [problem] and realized there wasn't a simple, single-purpose tool for it without paying a hefty subscription.
-
-### The Stack
-I used the MicroSaaS Factory monorepo:
-- Next.js (App Router)
-- Tailwind + shadcn/ui
-- Prisma + SQLite (local-first)
-- Vercel AI SDK
-
-### The Launch
-I launched it on [Product Hunt / X / Reddit] and here were the results:
-- [Metric 1]
-- [Metric 2]
-
-What do you guys think of the idea? Any feedback on the landing page?
-Link: [URL]
-`;
-    await fs.writeFile(path.join(LAUNCH_KIT_DIR, "indie-hackers-template.md"), ihTemplate, "utf8");
-    console.log("✅ Created Indie Hackers Template");
-
-    // Check if docs/microapps-30.json exists, if so mention it
-    const stubJsonPath = path.join(BASE_DOCS_DIR, "microapps-30.json");
-    if (await fs.pathExists(stubJsonPath)) {
-        console.log("✅ Found microapps-30.json - You have 30 ideas ready to launch!");
-    } else {
-        console.log("⚠️ microapps-30.json not found in docs. Make sure you generate stubs first.");
-    }
-
-    console.log("\n🎉 Launch Kit generated successfully in /launch-kit!");
-}
-
-generateLaunchKit().catch(console.error);
+console.log(`✅ Launch kit generated in docs/launch/`);
+console.log(`   - 30_linkedin_posts.md`);
+console.log(`   - 10_showcase_threads.md`);
+console.log(`   - 10_producthunt_blurbs.md`);
+console.log(`   - press_kit.md`);

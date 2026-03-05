@@ -1,0 +1,75 @@
+name: Weekly Media & Changelog
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday 9 AM UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm db:push && pnpm db:seed
+        env:
+          DATABASE_URL: file:./dev.db
+          JWT_SECRET: ci-test-secret
+
+      - run: npx playwright install --with-deps chromium
+
+      # Start dev servers in background
+      - run: |
+          pnpm --filter web dev &
+          pnpm --filter studio dev &
+          pnpm --filter microapp-resume dev &
+          sleep 15
+        env:
+          DATABASE_URL: file:./dev.db
+          JWT_SECRET: ci-test-secret
+
+      # Capture screenshots
+      - run: |
+          mkdir -p docs/assets/screenshots
+          npx playwright screenshot http://localhost:3000 docs/assets/screenshots/home.png
+          npx playwright screenshot http://localhost:3000/showcase docs/assets/screenshots/showcase.png
+          npx playwright screenshot http://localhost:3000/pricing docs/assets/screenshots/pricing.png
+          npx playwright screenshot http://localhost:3000/docs docs/assets/screenshots/docs.png
+          npx playwright screenshot http://localhost:3001 docs/assets/screenshots/studio.png
+
+      # Generate changelog summary
+      - run: |
+          echo "# This Week's Changes" > docs/CHANGELOG_SUMMARY.md
+          echo "" >> docs/CHANGELOG_SUMMARY.md
+          echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> docs/CHANGELOG_SUMMARY.md
+          echo "" >> docs/CHANGELOG_SUMMARY.md
+          git log --oneline --since='7 days ago' >> docs/CHANGELOG_SUMMARY.md || echo "No commits this week." >> docs/CHANGELOG_SUMMARY.md
+
+      # Create PR
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: weekly media capture & changelog"
+          title: "📸 Weekly Media Update"
+          body: |
+            Automated weekly update:
+            - Fresh screenshots of all pages
+            - Changelog summary from this week's commits
+          branch: weekly-media-update
+          delete-branch: true

@@ -7,7 +7,11 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "db:push": "pnpm --filter @microsaas/db exec prisma db push",
+    "db:seed": "pnpm --filter @microsaas/db exec tsx seed.ts",
+    "db:generate": "pnpm --filter @microsaas/db exec prisma generate",
+    "generate:launch-kit": "tsx scripts/generate-launch-kit.ts"
   },
   "devDependencies": {
     "eslint": "^8.0.0",
