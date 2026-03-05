@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button } from "@microsaas/ui";
 import { prisma } from "@microsaas/db";
 import { getSession } from "@microsaas/auth";

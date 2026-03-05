@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { generateObject, resolveProvider } from "@microsaas/llm";
 import { checkRateLimit, recordUsage, getCachedResponse, setCachedResponse } from "@microsaas/llm";
-import { prisma } from "@microsaas/db";
+import { prisma, resolveWorkspace, resolveMicroappId, resolveByokKeys } from "@microsaas/db";
 import { getSession } from "@microsaas/auth";
 import { revalidatePath } from "next/cache";
 import { sendEmail } from "@microsaas/email";
@@ -28,30 +28,17 @@ export async function extractMeetingActions(prevState: any, formData: FormData) 
     const headersList = headers();
     const clientIp = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
 
-    let workspaceId = "demo-workspace";
-    let userId = null;
+    const ctx = await resolveWorkspace(session?.userId || null);
+    const microappId = await resolveMicroappId("meeting");
     let userEmail = "demo@example.com";
-    let byokProvider = undefined;
-    let byokKey = undefined;
 
-    if (session) {
-        userId = session.userId;
-        const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (ctx.userId) {
+        const user = await prisma.user.findUnique({ where: { id: ctx.userId } });
         if (user) userEmail = user.email;
-
-        const membership = await prisma.membership.findFirst({ where: { userId: session.userId } });
-        if (membership) {
-            workspaceId = membership.workspaceId;
-            const keys = await prisma.llmKey.findMany({ where: { workspaceId } });
-            if (keys.length > 0) {
-                const found = keys.find(k => k.provider === "openai") || keys.find(k => k.provider === "gemini") || keys[0];
-                byokProvider = found.provider as any;
-                byokKey = Buffer.from(found.encryptedKey, "base64").toString("ascii");
-            }
-        }
     }
 
-    const resolved = resolveProvider(byokProvider, byokKey);
+    const byok = ctx.mode === "authenticated" ? await resolveByokKeys(ctx.workspaceId) : null;
+    const resolved = resolveProvider(byok?.provider as any, byok?.apiKey);
 
     if (resolved.badge !== "BYOK") {
         const rl = await checkRateLimit(clientIp);
@@ -64,8 +51,7 @@ export async function extractMeetingActions(prevState: any, formData: FormData) 
     const schemaFP = "meeting-v1";
     const cached = await getCachedResponse(resolved.provider, resolved.model || "", "", prompt, schemaFP);
     if (cached) {
-        const latencyMs = Date.now() - t0;
-        return { result: JSON.parse(cached), provider: resolved.badge, latencyMs, cached: true, userEmail };
+        return { result: JSON.parse(cached), provider: resolved.badge, latencyMs: Date.now() - t0, cached: true, userEmail };
     }
 
     let result: MeetingResult | null = null;
@@ -89,13 +75,13 @@ export async function extractMeetingActions(prevState: any, formData: FormData) 
 
     await prisma.event.create({
         data: {
-            workspaceId, microappId: "meeting", userId, action: "extract_notes",
+            workspaceId: ctx.workspaceId, microappId, userId: ctx.userId, action: "extract_notes",
             metadata: JSON.stringify({ latencyMs, provider: resolved.badge })
         }
     });
     await prisma.microappRun.create({
         data: {
-            workspaceId, userId, microappId: "meeting",
+            workspaceId: ctx.workspaceId, userId: ctx.userId, microappId,
             inputJson: JSON.stringify({ notesPreview: notes.slice(0, 100) }),
             outputJson: result ? JSON.stringify(result) : null,
             provider: resolved.provider, latencyMs, status: errorMsg ? "error" : "success", errorMessage: errorMsg

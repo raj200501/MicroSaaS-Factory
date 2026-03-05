@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { generateObject, resolveProvider } from "@microsaas/llm";
 import { checkRateLimit, recordUsage, getCachedResponse, setCachedResponse } from "@microsaas/llm";
-import { prisma } from "@microsaas/db";
+import { prisma, resolveWorkspace, resolveMicroappId, resolveByokKeys } from "@microsaas/db";
 import { getSession } from "@microsaas/auth";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -33,26 +33,10 @@ export async function generateTickets(prevState: any, formData: FormData) {
     const headersList = headers();
     const clientIp = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
 
-    let workspaceId = "demo-workspace";
-    let userId = null;
-    let byokProvider = undefined;
-    let byokKey = undefined;
-
-    if (session) {
-        userId = session.userId;
-        const membership = await prisma.membership.findFirst({ where: { userId: session.userId } });
-        if (membership) {
-            workspaceId = membership.workspaceId;
-            const keys = await prisma.llmKey.findMany({ where: { workspaceId } });
-            if (keys.length > 0) {
-                const found = keys.find(k => k.provider === "anthropic") || keys.find(k => k.provider === "gemini") || keys[0];
-                byokProvider = found.provider as any;
-                byokKey = Buffer.from(found.encryptedKey, "base64").toString("ascii");
-            }
-        }
-    }
-
-    const resolved = resolveProvider(byokProvider, byokKey);
+    const ctx = await resolveWorkspace(session?.userId || null);
+    const microappId = await resolveMicroappId("prd2jira");
+    const byok = ctx.mode === "authenticated" ? await resolveByokKeys(ctx.workspaceId) : null;
+    const resolved = resolveProvider(byok?.provider as any, byok?.apiKey);
 
     if (resolved.badge !== "BYOK") {
         const rl = await checkRateLimit(clientIp);
@@ -68,8 +52,7 @@ export async function generateTickets(prevState: any, formData: FormData) {
     const schemaFP = "prd2jira-v1";
     const cached = await getCachedResponse(resolved.provider, resolved.model || "", "", prompt, schemaFP);
     if (cached) {
-        const latencyMs = Date.now() - t0;
-        return { result: JSON.parse(cached), provider: resolved.badge, latencyMs, cached: true };
+        return { result: JSON.parse(cached), provider: resolved.badge, latencyMs: Date.now() - t0, cached: true };
     }
 
     let result: PRDResult | null = null;
@@ -93,13 +76,13 @@ export async function generateTickets(prevState: any, formData: FormData) {
 
     await prisma.event.create({
         data: {
-            workspaceId, microappId: "prd2jira", userId, action: "generate_tickets",
+            workspaceId: ctx.workspaceId, microappId, userId: ctx.userId, action: "generate_tickets",
             metadata: JSON.stringify({ latencyMs, provider: resolved.badge })
         }
     });
     await prisma.microappRun.create({
         data: {
-            workspaceId, userId, microappId: "prd2jira",
+            workspaceId: ctx.workspaceId, userId: ctx.userId, microappId,
             inputJson: JSON.stringify({ timeline, teamSize, prdPreview: prd.slice(0, 100) }),
             outputJson: result ? JSON.stringify(result) : null,
             provider: resolved.provider, latencyMs, status: errorMsg ? "error" : "success", errorMessage: errorMsg
