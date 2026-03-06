@@ -12,6 +12,8 @@
 import { prisma } from "@microsaas/db";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 interface TraceEvent {
     step: string;
     status: "success" | "error" | "skipped";
@@ -192,7 +194,7 @@ export default async function TracesPage() {
                                                 <div key={i} className="flex items-start gap-2.5">
                                                     <div className="flex flex-col items-center mt-1">
                                                         <span className={`w-2 h-2 rounded-full ${evt.status === "success" ? "bg-green-400" :
-                                                                evt.status === "error" ? "bg-red-400" : "bg-gray-400"
+                                                            evt.status === "error" ? "bg-red-400" : "bg-gray-400"
                                                             }`} />
                                                         {i < events.length - 1 && <div className="w-px h-4 bg-white/10 mt-0.5" />}
                                                     </div>
