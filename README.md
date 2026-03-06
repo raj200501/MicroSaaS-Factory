@@ -193,5 +193,5 @@ pnpm dev
 ---
 
 <p align="center">
-  <strong>Built by <a href="https://github.com/raj200501">raj200501</a></strong>
+  <strong>Built by <a href="https://github.com/raj200501">raj200501</a> and Codex</strong>
 </p>
