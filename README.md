@@ -16,6 +16,16 @@ A local-first AI microapp platform with <strong>evals</strong>, <strong>traces</
 
 ---
 
+## What is this?
+
+MicroSaaS Factory is a **monorepo platform for 30+ single-purpose AI microapps** — tools like Resume Bullet Generator, PRD → Jira Tickets, Cold Email Writer, SQL Query Builder, and more. Each tool is a focused Next.js page backed by shared packages for auth, database, LLM abstraction, and UI components.
+
+Everything runs locally with **SQLite + DummyProvider** (no API keys needed). Plug in your own OpenAI / Anthropic / Gemini key for real LLM output, or use the deterministic dummy mode for development, demos, and evals.
+
+**3 fully-featured apps** (Resume, PRD→Jira, Meeting Notes) + **30 tool-runner microapps** — all live, all functional.
+
+---
+
 ## Why this repo matters
 
 | Signal | What it shows |
