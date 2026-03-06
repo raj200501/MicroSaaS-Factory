@@ -7,8 +7,8 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
-    name: Build and Lint
+  build-and-test:
+    name: Build · Test · Evals
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: "file:./ci.db"
@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: ".nvmrc"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
@@ -44,3 +44,9 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Unit Tests
+        run: pnpm test
+
+      - name: Eval Suite
+        run: pnpm evals

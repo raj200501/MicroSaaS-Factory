@@ -1,0 +1,199 @@
+{
+  "timestamp": "2026-03-06T02:59:52.179Z",
+  "provider": "dummy",
+  "totalCases": 12,
+  "passed": 12,
+  "failed": 0,
+  "passRate": 1,
+  "avgLatencyMs": 0,
+  "results": [
+    {
+      "id": "email-subject-001",
+      "tool": "email-subject",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 376
+    },
+    {
+      "id": "email-subject-002",
+      "tool": "email-subject",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 386
+    },
+    {
+      "id": "seo-meta-001",
+      "tool": "seo-meta",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 384
+    },
+    {
+      "id": "ad-copy-001",
+      "tool": "ad-copy",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 584
+    },
+    {
+      "id": "cold-email-001",
+      "tool": "cold-email",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 286
+    },
+    {
+      "id": "resume-001",
+      "tool": "resume",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 852
+    },
+    {
+      "id": "blog-outline-001",
+      "tool": "blog-outline",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 483
+    },
+    {
+      "id": "tweet-thread-001",
+      "tool": "tweet-thread",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 594
+    },
+    {
+      "id": "prd2jira-001",
+      "tool": "prd2jira",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 602
+    },
+    {
+      "id": "meeting-001",
+      "tool": "meeting",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 372
+    },
+    {
+      "id": "code-explain-001",
+      "tool": "code-explain",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 491
+    },
+    {
+      "id": "sql-gen-001",
+      "tool": "sql-gen",
+      "passed": true,
+      "scores": {
+        "schema_valid": true,
+        "output_nonempty": true,
+        "min_lines_met": true,
+        "length_within_limit": true,
+        "contains_input_reference": true,
+        "no_error_thrown": true
+      },
+      "latencyMs": 0,
+      "outputLength": 469
+    }
+  ],
+  "metrics": {
+    "schema_validity_rate": 1,
+    "completion_rate": 1,
+    "mean_output_length": 490,
+    "error_rate": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0
+  }
+}

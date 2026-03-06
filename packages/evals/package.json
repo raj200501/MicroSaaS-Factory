@@ -1,0 +1,19 @@
+{
+    "name": "@microsaas/evals",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "evals": "tsx src/run.ts",
+        "evals:report": "tsx src/report.ts",
+        "test": "vitest run",
+        "build": "echo 'evals: no build needed'"
+    },
+    "dependencies": {
+        "zod": "^3.22.0"
+    },
+    "devDependencies": {
+        "tsx": "^4.7.1",
+        "vitest": "^1.6.0",
+        "typescript": "^5.0.0"
+    }
+}
